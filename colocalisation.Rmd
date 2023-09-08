@@ -1,0 +1,87 @@
+---
+title: "Colocalisation"
+author: "MW"
+date: "`r Sys.Date()`"
+output: html_document
+---
+## Load libraries
+Using Bayesian test for colocalisation from https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1004383
+
+```{r}
+library(TwoSampleMR)
+library(tidyverse)
+library(coloc)
+```
+
+## Read in data
+Coloc also needs proportion case:control (s) for the outcome, in this case prostate cancer, as input.
+```{r}
+trait <- "SPINT2"
+exp_dat <- read_exposure_data(paste0(file="exposure_coloc_input_",trait,".txt"), sep="\t")
+out_dat <- read_outcome_data(paste0(file="outcome_coloc_input_",trait,".txt"), sep="\t")
+s <- 	0.564437729 
+```
+
+## Harmonise data
+Use harmonise_data function in TwoSampleMR 
+```{r}
+dat <- harmonise_data(exp_dat,out_dat, action=1) #used TwoSampleMR to harmonise data
+
+```
+
+## Create outcome dataset
+```{r}
+SNPs <- dat$SNP
+outcomebeta <- dat$beta.outcome
+names(outcomebeta)<-SNPs
+outcomevarbeta <- dat$se.outcome^2
+names(outcomevarbeta)<-SNPs
+pos <- dat$pos.outcome
+names(pos)<- SNPs
+type <- "cc" #casecontrol
+
+
+outcomedataset <- list(snp=SNPs, beta=outcomebeta, varbeta=outcomevarbeta, position=pos, type=type, s=s)
+```
+
+## Check and plot outcome dataset
+```{r}
+check_dataset(outcomedataset)
+plot_dataset(outcomedataset)
+```
+
+## Create exposure dataset
+```{r}
+SNPs <- dat$SNP
+traitbeta <- dat$beta.exposure
+names(traitbeta)<-SNPs
+traitvarbeta <- dat$se.exposure^2
+names(traitvarbeta)<-SNPs
+pos <- dat$pos.outcome
+names(pos)<- SNPs
+type <- "quant"
+sdY <- 1
+
+traitdataset <- list(snp=SNPs, beta=traitbeta, varbeta=traitvarbeta, position=pos, type=type, sdY=sdY)
+
+```
+
+## Check and plot exposure dataset
+```{r}
+check_dataset(traitdataset)
+plot_dataset(traitdataset)
+```
+
+## Run coloc
+```{r}
+my.res <- coloc.abf(traitdataset,outcomedataset, MAF = NULL, p1 = 1e-04, p2 = 1e-04, p12 = 1e-05)
+```
+
+## Write data
+```{r}
+results <- as.data.frame(as.list(my.res$summary))
+results$trait <- trait
+results$cancer <- "prostate"
+write_tsv(results, paste0(file=trait,"_coloc_results.txt"))
+```
+

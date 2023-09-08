@@ -1,0 +1,4 @@
+id.exposure	exposure	id.outcome	outcome	nsnp	b	se	pval
+met-a-500	3-dehydrocarnitine* || id:met-a-500	prostate	prostate	1	-1.975087114640521	0.5242778611951155	1.6505400120561247e-4
+met-a-573	Isobutyrylcarnitine || id:met-a-573	prostate	prostate	2	0.3435055854816543	0.12386732972450865	0.005551252996192332
+met-a-652	Isovalerylcarnitine || id:met-a-652	prostate	prostate	1	0.40665905998428836	0.22723656427758743	0.07352071319463203

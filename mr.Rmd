@@ -1,0 +1,40 @@
+---
+title: "Run MR"
+author: "MW"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+## Load libraries
+```{r}
+library(TwoSampleMR)
+library(tidyverse)
+```
+
+## Read in exposure and outcome data
+```{r}
+outcome <- read_outcome_data("prostate.txt", sep = "\t", snp_col = "SNP", effect_allele_col = "Allele1", other_allele_col = "Allele2", pval_col = "Pvalue", beta_col = "Effect", se_col = "StdErr", eaf_col = "Freq1", chr_col = "Chr")
+
+exposure <- read_exposure_data("ivs.txt", sep="\t", phenotype_col = "exposure", snp_col = "snp", effect_allele_col = "ea", other_allele_col = "oa",  pval_col = "p", samplesize_col = "n", beta_col = "b")
+```
+
+## Harmonise data and write out file
+```{r}
+harmonised <- harmonise_data(exposure, outcome)
+write_tsv(harmonised, "prostate_harmonised_data.txt")
+```
+
+This harmonised data can be fed into the filtering script at this stage to calculate power and filter 'weak' IVs. The filtered data would need to be in the harmonised_data format to be fed back into the TwoSampleMR pipeline.
+
+## Run MR and write out results
+```{r}
+mr.methods=c("mr_wald_ratio", "mr_ivw", "mr_ivw_fe", "mr_weighted_median", "mr_weighted_mode", "mr_egger_regression")
+mr.res <- mr(harmonised, method_list=mr.methods)
+write_tsv(mr.res, "prostate_mr_results.txt")
+
+```

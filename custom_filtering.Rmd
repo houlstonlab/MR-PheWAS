@@ -1,0 +1,81 @@
+---
+title: "Custom_filtering"
+author: "MW"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Custom code for calculating PVE, F-statistic and power
+## Load libraries and data
+Input data should be output of harmonise_data function in TwoSampleMR package. ncase and ncontrol is number of cases and controls in output data
+```{r}
+library(tidyverse)
+ncase <- 79194 
+ncontrol <- 61112
+harmonised <- read_tsv("prostate_harmonised_data.txt")
+head(harmonised)
+```
+
+## Add Minor allele and calculate proportion of variance explained
+Use PVE equation from http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0120758.s001
+
+```{r}
+harmonised <- harmonised %>% mutate(maf=if_else(eaf.exposure>0.5,1-eaf.exposure,eaf.exposure))
+harmonised <-  harmonised %>% mutate(pve= (2 * beta.exposure ^ 2 * maf * (1 - maf)) / ((2 * beta.exposure ^ 2 * maf * (1 - maf)) + (se.exposure ^ 2 * 2 * samplesize.exposure * maf * (1 - maf))))
+head(harmonised)
+```
+
+## Compute F-statistic
+uses F statistic equations from https://academic.oup.com/ije/article/40/3/740/741448/Power-and-instrument-strength-requirements-for
+```{r}
+exposure_statistics <- harmonised %>% group_by(id.exposure) %>% summarise(exposure=first(exposure), n_snp=n(), r2=sum(pve), samplesize=first(samplesize.exposure)) %>% mutate(fstat=(r2 * (samplesize - 1 - n_snp)) / ((1 - r2) * n_snp))
+head(exposure_statistics)
+```
+
+## Calculate power for a range of odds ratios
+Uses power equations from https://cnsgenomics.shinyapps.io/mRnd/
+```{r}
+ors <- c(1.05,1.1,1.25,1.33,1.5)
+n <- ncase + ncontrol 
+k <- ncase/n
+alpha <- 0.05
+z.alpha <- qnorm(1 - alpha / 2, 0, 1)
+
+
+calculate_power <-  function(r2, n, k, ors){b01 <- k * (ors / (1 + k * (ors - 1)) - 1)
+    ncp <- (n * r2) * (k * (ors / (1 + k * (ors - 1)) - 1)) ^ 2 / (k * (1 - k) - b01 ^ 2)
+    power <- 1 + pnorm(-z.alpha - sqrt(ncp), 0, 1) - pnorm(z.alpha - sqrt(ncp), 0, 1)
+        power}
+
+power_table <- map_dfc(ors, ~mutate(exposure_statistics, !!sym(paste0("power",.)) := calculate_power(r2,n,k,.)) %>% select(starts_with("power"))) # apply power function to table. 
+head(power_table)
+```
+
+## Combine power, PVE and F-statistic
+```{r}
+stats_dat <- bind_cols(exposure_statistics, power_table)
+head(stats_dat)
+```
+
+## Filter data
+Filter 1) missing data e.g. sample size not available 2) F-stat >10 (rule of thumb for MR analysis) 3) duplicated exposures, taking the one with highest power. Write out tables. Filtered harmonised data can then be fed into mr function in TwoSampleMR.
+```{r}
+stats_dat %>% filter(!is.na(power1.05)) -> stats_dat_no_NA #1 
+
+stats_dat_no_NA %>% filter(fstat>=10) -> filter_data_1 #2
+
+filter_data_1 %>%
+    group_by(exposure) %>%              
+    arrange(desc(power1.05)) %>%
+    slice(1) -> test_data_2 #3
+
+write_tsv(test_data_2, "power_table_prostate_filter.txt")
+
+test_data_2 %>% ungroup %>%
+    select(1) -> power_id
+
+pruned_harmonised_data <- left_join(power_id, harmonised, by="id.exposure")
+head(pruned_harmonised_data)
+write_tsv(pruned_harmonised_data, "prostate_filtered_harmonised_data.txt")
+```
+

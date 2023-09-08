@@ -1,0 +1,8 @@
+id.exposure	id.outcome	outcome	exposure	method	nsnp	b	se	pval
+ieu-b-4879	FZfxPi	outcome	ieu-b-4879#telomere length	Inverse variance weighted	94	0.22453204229527124	0.06809971090638128	9.768623345379032e-4
+ieu-b-4879	FZfxPi	outcome	ieu-b-4879#telomere length	Inverse variance weighted (fixed effects)	94	0.22453204229527124	0.040324673163777025	2.575236060748787e-8
+ieu-b-4879	FZfxPi	outcome	ieu-b-4879#telomere length	Weighted median	94	0.33566091522593955	0.07191545429989403	3.049789205163641e-6
+ieu-b-4879	FZfxPi	outcome	ieu-b-4879#telomere length	Weighted mode	94	0.3113370421032151	0.06675661073866078	1.0369357313281038e-5
+ieu-b-4879	FZfxPi	outcome	ieu-b-4879#telomere length	MR Egger	94	0.3353670680035783	0.13150643828104427	0.012418956230441109
+met-a-500	FZfxPi	outcome	met-a-500#3-dehydrocarnitine*	Inverse variance weighted	2	-1.4078843340209561	0.427477031288338	9.895762031793282e-4
+met-a-500	FZfxPi	outcome	met-a-500#3-dehydrocarnitine*	Inverse variance weighted (fixed effects)	2	-1.4078843340209561	0.3918917203892272	3.274778965973746e-4

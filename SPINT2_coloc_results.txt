@@ -1,0 +1,2 @@
+nsnps	PP.H0.abf	PP.H1.abf	PP.H2.abf	PP.H3.abf	PP.H4.abf	trait	cancer
+7353	0	2.224817298203812e-28	0	1	1.0594078410072925e-25	SPINT2	prostate

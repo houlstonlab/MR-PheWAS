@@ -1,0 +1,47 @@
+---
+title: "MVMR"
+author: "MW"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Load libraries
+```{r}
+library(TwoSampleMR)
+library(tidyverse)
+```
+
+## List MR Base IDs for exposures of interest
+```{r}
+cancer <- "prostate"
+id_name <- "fatty_acid_lipoprotein"
+id_exposure <-c("met-a-500", "met-a-573", "met-a-652")
+
+```
+
+## Extract exposures from MR Base
+```{r}
+exposure_dat <- mv_extract_exposures(id_exposure)
+```
+## Read in outcome data and align to exposure IVs
+```{r}
+data <- read_tsv("prostate_mvmr.txt")
+inner_join(data, exposure_dat, by=c("SNP"="SNP")) ->  joined_exposure_outcome
+```
+
+## Format data for MVMR
+```{r}
+names(joined_exposure_outcome) <- c("MarkerName", "rs_id", "SNP", "chr", "pos", "effect_allele", "other_allele", "eaf","FreqSE", "MinFreq", "MaxFreq", "beta", "se", "pval", "Direction", "OncoArray_imputation_r2", "exposure", "id.exposure", "effect_allele.exposure", "other_allele.exposure", "eaf.exposure", "beta.exposure", "se.exposure", "pval.exposure")
+joined_exposure_outcome %>% select("SNP", "effect_allele", "other_allele", "beta", "se", "pval", "chr", "pos", "eaf") -> outcome
+outcome %>% rename(beta.outcome=beta, se.outcome=se, pval.outcome=pval, effect_allele.outcome=effect_allele, other_allele.outcome=other_allele, eaf.outcome=eaf) -> outcome 
+outcome %>% mutate(outcome=cancer, id.outcome=cancer, proxy.outcome=FALSE, target_snp=SNP, proxy_snp=SNP, target_a1.outcome="NA", target_a2.outcome="NA",proxy_a1.outcome="NA", proxy_a2.outcome="NA", originalname.outcome="cancer", outcome.deprecated="cancer", mr_keep.outcome=TRUE, data_source.outcome="inhouse" ) -> outcome_dat
+```
+
+
+## Run MVMR and write out results
+```{r}
+mvdat <- mv_harmonise_data(exposure_dat, outcome_dat)
+res <- mv_multiple(mvdat)
+write_tsv(res$result, file=paste0(cancer,"_", id_name,"_MVMR.txt"))
+```
+
