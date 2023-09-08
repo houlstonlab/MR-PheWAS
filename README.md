@@ -9,4 +9,8 @@ Contains the following scripts:
 2a: colocalisation- Bayesian colocalisation of exposure and outcome data used for proteomic traits.  
 2b: MVMR- example script to run an MVMR based on TwoSampleMR.  
 
+### Citation:
+If you used or adapted this code in your study, please cite our paper (https://www.medrxiv.org/content/10.1101/2023.02.15.23285952v2)   
+*Risk factors for eight common cancers revealed from a phenome-wide Mendelian randomisation analysis of 378,142 cases and 485,715 controls*
+
 
