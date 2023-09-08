@@ -1,0 +1,32 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Risk factors for eight common cancers revealed from a
+  phenome-wide Mendelian randomisation analysis of 378,142
+  cases and 485,715 controls
+message: >-
+  If you use this dataset, please cite it using the metadata
+  from this file.
+type: dataset
+authors:
+  - given-names: Molly
+    family-names: Went
+    email: molly.went@icr.ac.uk
+    affiliation: 'The Institute of Cancer Research '
+    orcid: 'https://orcid.org/0000-0003-3271-975X'
+  - given-names: Amit
+    family-names: Sud
+    email: amit.sud@icr.ac.uk
+    orcid: 'https://orcid.org/0000-0002-6133-0164'
+    affiliation: The Institute of Cancer Research
+  - given-names: Charlie
+    family-names: Mills
+    email: charlie.mills@icr.ac.uk
+    affiliation: 'The Institute of Cancer Research '
+    orcid: 'https://orcid.org/0000-0002-4755-7549'
+identifiers:
+  - type: doi
+    value: 10.1101/2023.02.15.23285952
+    description: medRxiv 2023.02.15.23285952
