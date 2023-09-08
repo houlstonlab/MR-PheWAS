@@ -7,9 +7,9 @@ title: >-
   phenome-wide Mendelian randomisation analysis of 378,142
   cases and 485,715 controls
 message: >-
-  If you use this dataset, please cite it using the metadata
-  from this file.
-type: dataset
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
 authors:
   - given-names: Molly
     family-names: Went
@@ -26,7 +26,11 @@ authors:
     email: charlie.mills@icr.ac.uk
     affiliation: 'The Institute of Cancer Research '
     orcid: 'https://orcid.org/0000-0002-4755-7549'
+  - given-names: Abi
+    family-names: Hyde
+    affiliation: 'The Institute of Cancer Research '
 identifiers:
   - type: doi
     value: 10.1101/2023.02.15.23285952
     description: medRxiv 2023.02.15.23285952
+url: 'https://doi.org/10.1101/2023.02.15.23285952'
