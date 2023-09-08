@@ -7,8 +7,8 @@ title: >-
   phenome-wide Mendelian randomisation analysis of 378,142
   cases and 485,715 controls
 message: >-
-  If you use this software, please cite it using the
-  metadata from this file.
+  If you use this code, please cite it using the
+  doi below.
 authors:
   - given-names: Molly
     family-names: Went
