@@ -10,7 +10,7 @@ Scripts and toy data for running the MR-PheWAS analysis in "Risk factors for eig
 2b: MVMR- example script to run an MVMR based on TwoSampleMR  
 
 ### Citation:
-If you used or adapted this code in your study, please cite our paper: https://www.medrxiv.org/content/10.1101/2023.02.15.23285952v2   
-*Risk factors for eight common cancers revealed from a phenome-wide Mendelian randomisation analysis of 378,142 cases and 485,715 controls*
+If you used or adapted this code in your study, please cite our paper: https://www.nature.com/articles/s41467-024-46927-z   
+*Phenome-wide Mendelian randomisation analysis of 378,142 cases reveals risk factors for eight common cancers*
 
 
